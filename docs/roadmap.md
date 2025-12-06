@@ -36,6 +36,9 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Safety: schema validation + rate limits before applying agent proposals.
 - Add agent-focused regression packs and documentation that highlight holographic/Faceted/Quantum role bindings.
 - Update status doc (`docs/status/phase3.md`) detailing agent spawn constraints, focus/handoff rules, and failure logging.
+- **Status**: Initiated. Phase 3 scope, artifacts, and validation checklist are documented in `docs/status/phase3.md`; work now
+  focuses on enforcing safety rails, capability discovery, and deterministic replay for agent-driven intents across wearables,
+  web, and holographic surfaces.
 
 ## Phase 4: Integrations
 - Game engine bridges (Unity/Unreal) via OSC/UDP/gRPC with sample scenes.
