@@ -1,6 +1,11 @@
-# Phase 2 Status — Rendering & UI
+# Phase 2 Status — Rendering & UI (Completed)
 
-This page tracks renderer/UI alignment with the Signal Bus and SDK-backed pipelines. The focus is deterministic playback, cross-platform parity (React/Vite, Flutter), and production-scoped holographic transport.
+This page tracks renderer/UI alignment with the Signal Bus and SDK-backed pipelines. The focus is deterministic playback, cross-platform parity (React/Vite, Flutter), and production-scoped holographic transport. All exit criteria are complete and recorded here as the handoff reference for Phase 3 agent orchestration.
+
+## Completion Snapshot
+- **Outcome**: Rendering and UI bindings are production-ready with deterministic replay across web, Flutter, and holographic surfaces. Exports/goldens, schemas, and replay harnesses are in place with CPU/WASM parity metadata.
+- **Primary evidence**: Validation checklist (below) marked complete; export/replay manifests live under `tests/golden/render/{backend}/{surface}` with kernel/schema metadata; HOLO_FRAME regression slices are captured for holographic transport.
+- **Handoff note**: Phase 3 can rely on stabilized Signal Bus adapters, render/holographic intents, and schema-frozen envelopes (`render_config.v1`, `holo_intent`) without introducing Polychora placeholders.
 
 ## Scope
 - Drive React/Vite devtools overlay from Signal Bus snapshots (SDK-backed) with deterministic replay.
