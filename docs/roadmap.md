@@ -17,8 +17,8 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Build WASM math module for parity with CPU reference; snapshot tests across backends.
 - Mark holographic transport as production-scope alongside Faceted/Quantum; explicitly exclude placeholder Polychora paths.
 - Ship `just docs:phase1` to assert updated SDK mappings, schema revisions, and OpenXR/WebXR harness readiness.
-- **Current work**: SDK alignment scope, artifacts, and validation are documented in `docs/status/phase1.md` with progress notes and exit criteria being filled out.
-- **Upcoming**: close gaps/risks, document SDK-specific installation steps, and run WASM parity plus HOLO_FRAME harness smoke tests as part of exit.
+- **Status**: Completed. SDK-backed telemetry, schema revisions, WASM parity, and HOLO_FRAME harness smoke tests are validated; see `docs/status/phase1.md` for the fully checked validation checklist and exit notes.
+- **Handoff**: Phase 2 leverages SDK baselines, published schema bindings, and recorded latency/jitter metrics; Phase 3 now builds on these stabilized outputs.
 
 ## Phase 2: Rendering & UI
 - Wire Signal Bus snapshots to React/Vite devtools overlay; ensure deterministic playback/replay.
@@ -36,6 +36,9 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Safety: schema validation + rate limits before applying agent proposals.
 - Add agent-focused regression packs and documentation that highlight holographic/Faceted/Quantum role bindings.
 - Update status doc (`docs/status/phase3.md`) detailing agent spawn constraints, focus/handoff rules, and failure logging.
+- **Status**: Initiated. Phase 3 scope, artifacts, and validation checklist are documented in `docs/status/phase3.md`; work now
+  focuses on enforcing safety rails, capability discovery, and deterministic replay for agent-driven intents across wearables,
+  web, and holographic surfaces.
 
 ## Phase 4: Integrations
 - Game engine bridges (Unity/Unreal) via OSC/UDP/gRPC with sample scenes.
