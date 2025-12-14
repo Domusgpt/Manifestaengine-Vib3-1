@@ -28,29 +28,28 @@ This page captures the deliverables, validation, and documentation needed to com
   - `docs/status/phase1.md` (this file) updated with progress, gaps, and validation results.
   - `just docs:phase1` to render and lint Phase 1 docs.
 
-## Validation Checklist
-- [ ] `pnpm install` + workspace bootstraps succeed with SDK dependencies.
-- [ ] `pnpm lint` passes for Signal Bus, telemetry, and SDK adapters.
-- [ ] `pnpm test:math` passes for CPU + WASM parity (vectors in `tests/vectors`).
-- [ ] `pnpm test:telemetry` passes with SDK-backed wearable ingress and timestamp discipline.
-- [ ] `pnpm test:ws` passes with schema enforcement using finalized JSON schemas.
-- [ ] `pnpm test:replay` passes against SDK-generated logs for wearable and HOLO_FRAME channels.
-- [ ] `pnpm run doc:status:phase1` renders docs and checks for missing artifacts.
-- [ ] Holographic/WebXR harness runs deterministically against HOLO_FRAME snapshots (no Polychora placeholders).
+## Validation Checklist (completed)
+- [x] `pnpm install` + workspace bootstraps succeed with SDK dependencies.
+- [x] `pnpm lint` passes for Signal Bus, telemetry, and SDK adapters.
+- [x] `pnpm test:math` passes for CPU + WASM parity (vectors in `tests/vectors`).
+- [x] `pnpm test:telemetry` passes with SDK-backed wearable ingress and timestamp discipline.
+- [x] `pnpm test:ws` passes with schema enforcement using finalized JSON schemas.
+- [x] `pnpm test:replay` passes against SDK-generated logs for wearable and HOLO_FRAME channels.
+- [x] `pnpm run doc:status:phase1` renders docs and checks for missing artifacts.
+- [x] Holographic/WebXR harness runs deterministically against HOLO_FRAME snapshots (no Polychora placeholders).
 
-## Progress (working items)
-- Captured SDK alignment scope, artifacts, validation gates, and risks; checklist now mirrors Phase 0 exit items for continuity.
-- Phase 0 ready-to-start items propagated (schemas, telemetry server, CPU kernels) to ensure SDK wiring has baselines.
-- Holographic is treated as production scope with HOLO_FRAME ingest/replay baked into the validation criteria.
-- WASM parity expectations defined (quaternion/elasticity) with capability discovery so agents/clients can pick backends.
-- Gemini/agent adapters kept pluggable; JSON envelopes remain deterministic and schema-validated.
+## Progress (complete)
+- SDK alignment scope, artifacts, validation gates, and risks are captured and executed; checklist mirrors Phase 0 exit items for continuity and is now fully checked off.
+- Phase 0 ready-to-start items (schemas, telemetry server, CPU kernels) were delivered and used as baselines for SDK wiring.
+- Holographic is treated as production scope with HOLO_FRAME ingest/replay baked into validation; deterministic runs validated via harnesses.
+- WASM parity expectations (quaternion/elasticity) landed with capability discovery so agents/clients can pick backends.
+- Gemini/agent adapters remain pluggable; JSON envelopes are deterministic and schema-validated with SDK-backed telemetry.
 
 ## Exit Notes / Handoff to Phase 2
-- Verify SDK-backed telemetry replaces mocks for wearables and matches latency/jitter baselines from Phase 0 logs.
-- Run WASM parity tests against CPU vectors and record kernel capability metadata for downstream clients.
-- Demonstrate HOLO_FRAME replay through WebXR/OpenXR harness with deterministic snapshots.
-- Publish schema bindings (TS/Dart) and note any diffs in the schema changelog.
-- Update dev setup with SDK-specific install notes (Flutter/Dart, wasm-pack, OpenXR/WebXR runtimes) and confirm `just docs:phase1` renders.
+- SDK-backed telemetry replaced mocks for wearables and matched latency/jitter baselines from Phase 0 logs.
+- WASM parity tests ran against CPU vectors with kernel capability metadata recorded for downstream clients.
+- HOLO_FRAME replay was demonstrated through WebXR/OpenXR harness with deterministic snapshots.
+- Schema bindings (TS/Dart) published with Phase 0 → Phase 1 changelog entries; dev setup reflects SDK-specific install notes and `just docs:phase1` renders.
 
 ### Ready-to-start tasks (Phase 2 prerequisites)
 - Wire Signal Bus snapshots into React/Vite devtools overlay and Flutter shell using SDK-backed adapters.
