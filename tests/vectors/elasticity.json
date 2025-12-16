@@ -1,0 +1,16 @@
+[
+  {
+    "position": [1, 0, 0],
+    "anchor": [0, 0, 0],
+    "velocity": [0, 0, 0],
+    "state": {"restLength": 0.5, "stiffness": 10, "damping": 0.5},
+    "expected": {"tension": 5.0, "force": [5.0, 0.0, 0.0], "potentialEnergy": 1.25}
+  },
+  {
+    "position": [0, 1, 0],
+    "anchor": [0, 0, 0],
+    "velocity": [0.1, 0.1, 0],
+    "state": {"restLength": 0.25, "stiffness": 8, "damping": 0.2},
+    "expected": {"tension": 6.02, "force": [0.0, 6.02, 0.0], "potentialEnergy": 2.25}
+  }
+]
