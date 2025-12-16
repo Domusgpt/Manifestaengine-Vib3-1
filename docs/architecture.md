@@ -135,11 +135,11 @@ Derived (keep optional, computed inside math kernels):
 5. Add Gemini/LLM adapter that consumes/produces the JSON protocol without owning control flow.
 
 ### Phase 0 Execution Notes
-- **Schemas first**: land `event.v1` and `agent_frame.v1` JSON schemas plus generated TS/Dart bindings to unblock telemetry validation.
-- **Telemetry harness**: stand up websocket ingress with mock wearable/gamepad/OSC emitters; attach monotonic timestamps and schema validation before Signal Bus commit.
-- **Buffers**: implement IMU/gyro ring buffers and the Signal Bus journal with replay hooks; expose inspection endpoints for agents and tests.
-- **Math parity**: add CPU reference kernels (quaternion fusion, elasticity) with vectors + `pnpm test:math` parity checks.
-- **Holographic readiness**: even before rendering, capture/replay `HOLO_FRAME` envelopes so Phase 1+ can validate transports.
+- **Schemas first**: land `event.v1` and `agent_frame.v1` JSON schemas plus generated TS/Dart bindings to unblock telemetry validation. ✅ (checked in `schema/event.v1.json`, `schema/agent_frame.v1.json`, TypeScript+Dart bindings)
+- **Telemetry harness**: stand up websocket ingress with mock wearable/gamepad/OSC emitters; attach monotonic timestamps and schema validation before Signal Bus commit. ✅ (`services/telemetry/ws-server`, `scripts/mock/*.ts` feeding validated envelopes)
+- **Buffers**: implement IMU/gyro ring buffers and the Signal Bus journal with replay hooks; expose inspection endpoints for agents and tests. ▶️ Replay hook scaffolded via `scripts/replay.ts` with schema validation.
+- **Math parity**: add CPU reference kernels (quaternion fusion, elasticity) with vectors + `pnpm test:math` parity checks. ✅ (`packages/math/src/*`, vectors under `tests/vectors/` with test runner)
+- **Holographic readiness**: even before rendering, capture/replay `HOLO_FRAME` envelopes so Phase 1+ can validate transports. ✅ HOLO_FRAME fields validated in schemas and runtime validators with websocket ingress support.
 
 ### Phase 1 Alignment (early plan)
 - **SDK-first ingestion**: swap mock/equivalence layers for vib34d-xr-quaternion-sdk where available; keep mock emitters for regression and jitter comparisons.

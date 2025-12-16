@@ -55,6 +55,8 @@ def _extract_minimal_parameters(kind: str, payload: Mapping[str, Any]) -> Minima
     if kind == "holo_intent":
         render_config = payload.get("render_config", {})
         return render_config.get("inputs", {})
+    if kind == "holo_frame.v1":
+        return payload.get("inputs", {})
     raise ValidationError(f"Unsupported envelope kind: {kind}")
 
 

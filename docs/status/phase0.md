@@ -30,12 +30,12 @@ This page tracks the concrete outputs, checks, and docs needed to exit Phase 0 (
   - Diagram of ingress → Signal Bus → math kernels → replay hooks (can live in `docs/architecture.md`).
 
 ## Validation Checklist
-- [ ] `pnpm install` succeeds and workspace scripts are available.
+- [x] `pnpm install` succeeds and workspace scripts are available.
 - [ ] `pnpm lint` passes for schema and runtime packages.
-- [ ] `pnpm test:math` passes against CPU kernels and vectors.
-- [ ] `pnpm test:telemetry` passes (ingress validation, ring buffer bounds, replay determinism).
-- [ ] `pnpm test:ws` passes (websocket ingest + schema validation).
-- [ ] `pnpm test:replay` replays captured JSON logs and matches expected snapshots.
+- [x] `pnpm test:math` passes against CPU kernels and vectors.
+- [x] `pnpm test:telemetry` passes (ingress validation, ring buffer bounds, replay determinism).
+- [x] `pnpm test:ws` passes (websocket ingest + schema validation).
+- [x] `pnpm test:replay` replays captured JSON logs and matches expected snapshots.
 - [ ] `pnpm run doc:status:phase0` renders this page and confirms required artifacts are linked.
 - [ ] Holographic `HOLO_FRAME` ingest/replay smoke test passes (even if rendering is stubbed).
 

@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vib3.plus/schema/agent_frame.v1.json",
+  "title": "agent_frame.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["role", "goal", "sdk_surface", "bounds", "focus", "inputs", "outputs", "safety"],
+  "properties": {
+    "role": {"type": "string"},
+    "goal": {"type": "string"},
+    "sdk_surface": {"type": "string"},
+    "bounds": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "additionalProperties": false,
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "z": {"type": "number"}
+      }
+    },
+    "focus": {
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string"},
+        "hoist": {"type": "boolean"}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["POINTER_DELTA", "ZOOM_DELTA", "ROT_DELTA", "INPUT_TRIGGER"],
+      "additionalProperties": false,
+      "properties": {
+        "POINTER_DELTA": {
+          "type": "object",
+          "required": ["dx", "dy"],
+          "additionalProperties": false,
+          "properties": {
+            "dx": {"type": "number"},
+            "dy": {"type": "number"}
+          }
+        },
+        "ZOOM_DELTA": {"type": "number"},
+        "ROT_DELTA": {"type": "number"},
+        "INPUT_TRIGGER": {"type": "boolean"},
+        "HOLO_FRAME": {
+          "type": "object",
+          "required": ["quaternion", "translation", "surface"],
+          "additionalProperties": false,
+          "properties": {
+            "quaternion": {
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "translation": {
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "surface": {"type": "string"},
+            "metadata": {"type": "object"}
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "safety": {
+      "type": "object",
+      "required": ["spawn_bounds", "rate_limit"],
+      "additionalProperties": false,
+      "properties": {
+        "spawn_bounds": {"type": "number"},
+        "rate_limit": {"type": "number"},
+        "rejection_reason": {"type": "string"}
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "latency_ms": {"type": "number"},
+        "jitter_ms": {"type": "number"},
+        "replay_frame": {"type": "string"}
+      }
+    }
+  }
+}

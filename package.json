@@ -1,0 +1,20 @@
+{
+  "name": "vib3-plus-unified",
+  "version": "0.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test:math": "ts-node packages/math/tests/run-math-tests.ts",
+    "test:telemetry": "ts-node services/telemetry/tests/test-telemetry.ts",
+    "test:ws": "ts-node services/telemetry/tests/test-ws.ts",
+    "test:replay": "ts-node scripts/tests/test-replay.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
