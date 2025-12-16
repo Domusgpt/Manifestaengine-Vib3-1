@@ -4,10 +4,14 @@ To make the Unified Engine easy to build, test, and extend across web, mobile, a
 
 For day-to-day work, start each dev session by pasting the reusable prompt in `docs/dev-session-prompt.md`; it enforces phase alignment, tool bootstrapping, schema validation, and required tests/artifacts.
 
+Run `./scripts/bootstrap_tools.sh` to verify the core runtime tooling and install dev dependencies before you begin coding or testing.
+
 ## Core Runtimes
 - **Node.js 20.x** with **pnpm** (preferred for Vite/React front-end and tooling).
 - **Dart 3.x / Flutter stable** for mobile/wearable bindings and CanvasKit targets.
 - **Python 3.11+** for scripting, CLI automation, and reference math kernels.
+  - Install Python dev deps with `pip install -r requirements-dev.txt` to run the local pytest suites while other workspaces are down.
+  - Run `pytest -q` (or `python -m pytest -q`) as a fast gate before layering pnpm/Flutter/OpenXR harnesses back in.
 - **OpenXR/WebXR runtimes** (or platform emulators) for holographic/volumetric testing.
 
 ## Suggested Global Tooling
