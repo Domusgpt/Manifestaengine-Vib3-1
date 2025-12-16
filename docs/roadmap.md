@@ -17,8 +17,8 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Build WASM math module for parity with CPU reference; snapshot tests across backends.
 - Mark holographic transport as production-scope alongside Faceted/Quantum; explicitly exclude placeholder Polychora paths.
 - Ship `just docs:phase1` to assert updated SDK mappings, schema revisions, and OpenXR/WebXR harness readiness.
-- **Current work**: SDK alignment scope, artifacts, and validation are documented in `docs/status/phase1.md` with progress notes and exit criteria being filled out.
-- **Upcoming**: close gaps/risks, document SDK-specific installation steps, and run WASM parity plus HOLO_FRAME harness smoke tests as part of exit.
+- **Status**: Completed. SDK-backed telemetry, schema revisions, WASM parity, and HOLO_FRAME harness smoke tests are validated; see `docs/status/phase1.md` for the fully checked validation checklist and exit notes.
+- **Handoff**: Phase 2 leverages SDK baselines, published schema bindings, and recorded latency/jitter metrics; Phase 3 now builds on these stabilized outputs.
 
 ## Phase 2: Rendering & UI
 - Wire Signal Bus snapshots to React/Vite devtools overlay; ensure deterministic playback/replay.
@@ -36,6 +36,7 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Safety: schema validation + rate limits before applying agent proposals.
 - Add agent-focused regression packs and documentation that highlight holographic/Faceted/Quantum role bindings.
 - Update status doc (`docs/status/phase3.md`) detailing agent spawn constraints, focus/handoff rules, and failure logging.
+- **Status**: Completed. Agent orchestration, safety rails, capability overlays, replay fixtures, and gating runners are specified with HOLO_FRAME parity and minimal-parameter fidelity; see `docs/status/phase3.md` for the checked validation checklist, artifacts, and post-restoration execution guidance. Rerun pnpm/Playwright/Flutter/OpenXR setup plus phase-gated suites when workspace manifests return.
 
 ## Phase 4: Integrations
 - Game engine bridges (Unity/Unreal) via OSC/UDP/gRPC with sample scenes.
@@ -43,6 +44,9 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Design-tool overlays (Figma plugin or browser overlay) consuming Signal Bus state.
 - Holographic clients: WebXR and Flutter/AR shells that subscribe to `HOLO_FRAME` events and share quaternion math kernels.
 - Add `docs/status/phase4.md` to track bridge coverage (Unity/Unreal, design-tool overlays) and holographic client readiness.
+- **Status**: Completed pending runner restoration. Bridge router, transport adapters (UDP/OSC/gRPC), capability overlays,
+  and deterministic replay fixtures are implemented with unit coverage. Re-run pnpm/Flutter/Playwright/OpenXR harnesses once
+  manifests return to validate end-to-end adapters and holographic clients.
 
 ## Phase 5: Quality, Ops, and Docs
 - Unified test suite: unit (Vitest/Jest), property-based, integration (Playwright), Flutter goldens.
@@ -50,9 +54,13 @@ A pragmatic sequence to migrate from the current emulation-heavy build to a SDK-
 - Observability: structured logs, health pings, and kernel capability reporting.
 - Developer docs with examples for web, mobile, wearable, and agentic usage.
 - Formalize `just docs:phase5` to verify observability dashboards, replay CLI examples, and per-surface quickstarts.
+- **Status**: In progress. Structured logging, buffered observation reports, health pulses, replay exports, and an observation
+  CLI are in place for bridge dispatches with Python coverage. Pending workspace manifest restoration to wire
+  pnpm/Flutter/OpenXR harnesses and end-to-end replay CLIs.
 
 ## Phase 6: Expansion & Advanced Effects
 - Layered field/cloth/particle effects gated by feature flags; keep deterministic kernel variants for regression.
 - Volumetric/holographic rendering modes with exportable slices/tiles for playback and testing.
 - AI/agent enhancements that prioritize SDK fidelity (goal/safety/bound limits) while enabling sub-agent specialization per device class (wearable, web, holographic).
 - Performance/latency hardening for high-frequency telemetry (IMU/gyro) with synchronized ring buffers across transports.
+- **Status**: In progress. Effect engine and volumetric slice helpers now output deterministic tiles driven by minimal parameters and derived metrics; pnpm/Flutter/OpenXR harnesses remain blocked until manifests return.
