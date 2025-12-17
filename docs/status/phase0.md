@@ -30,22 +30,24 @@ This page tracks the concrete outputs, checks, and docs needed to exit Phase 0 (
   - Diagram of ingress → Signal Bus → math kernels → replay hooks (can live in `docs/architecture.md`).
 
 ## Validation Checklist
-- [ ] `pnpm install` succeeds and workspace scripts are available.
-- [ ] `pnpm lint` passes for schema and runtime packages.
-- [ ] `pnpm test:math` passes against CPU kernels and vectors.
-- [ ] `pnpm test:telemetry` passes (ingress validation, ring buffer bounds, replay determinism).
-- [ ] `pnpm test:ws` passes (websocket ingest + schema validation).
-- [ ] `pnpm test:replay` replays captured JSON logs and matches expected snapshots.
-- [ ] `pnpm run doc:status:phase0` renders this page and confirms required artifacts are linked.
-- [ ] Holographic `HOLO_FRAME` ingest/replay smoke test passes (even if rendering is stubbed).
+- [x] `pnpm install` succeeds and workspace scripts are available.
+- [x] `pnpm lint` passes for schema and runtime packages.
+- [x] `pnpm test:math` passes against CPU kernels and vectors.
+- [x] `pnpm test:telemetry` passes (ingress validation, ring buffer bounds, replay determinism).
+- [x] `pnpm test:ws` passes (websocket ingest + schema validation).
+- [x] `pnpm test:replay` replays captured JSON logs and matches expected snapshots.
+- [x] `pnpm run doc:status:phase0` renders this page and confirms required artifacts are linked.
+- [x] `pnpm run phase:0` aggregates schema presence checks and telemetry/math/replay test runs.
+- [x] Holographic `HOLO_FRAME` ingest/replay smoke test passes (even if rendering is stubbed).
 
-## Progress (working items)
-- Drafted schema targets for `event.v1` and `agent_frame.v1` with HOLO_FRAME coverage and language bindings planned (TS/Dart).
-- Established telemetry scaffolding plan: websocket ingress + mock emitters for wearable IMU, gamepad, and OSC/MIDI with signed timestamps.
-- Tooling bootstrap outlined (Node/pnpm, Dart/Flutter, wasm-pack, OpenXR/WebXR emulators, Playwright) to keep telemetry and holographic tests runnable.
-- Math kernel expectations set (CPU quaternion fusion + elasticity) with vectors/test harnesses defined for parity checks.
-- Buffering approach documented (IMU ring buffers + Signal Bus journal) with deterministic replay as a first-class requirement.
-- Exit checklist mirrored into Phase 1 status so SDK alignment can start as soon as schemas, mocks, and reference kernels are landed.
+## Progress (complete)
+✅ Versioned schemas (`event.v1`, `agent_frame.v1`) landed with HOLO_FRAME coverage and generated TS/Dart bindings.
+✅ Telemetry scaffolding online: websocket ingress, mock emitters (wearable IMU, gamepad, OSC/MIDI), signed timestamps, and schema validation.
+✅ Tooling bootstrap verified (Node/pnpm + ts-node) with doc/test runners wired for repeatable local execution.
+✅ CPU reference math kernels (quaternion fusion, elasticity) plus shared vectors and parity tests under `pnpm test:math`.
+✅ IMU ring buffer and Signal Bus journal implemented with deterministic replay; tests exercise buffer bounds and HOLO_FRAME playback.
+✅ HOLO_FRAME ingest/replay smoke tests pass via websocket/replay harness; schemas enforce holographic envelopes end-to-end.
+✅ Exit checklist mirrored forward into Phase 1 status so SDK alignment can build directly on the Phase 0 baseline.
 
 ## Exit Notes / Handoff to Phase 1
 - Confirm schema versions are pinned and published to a package (npm + Dart).
@@ -54,9 +56,7 @@ This page tracks the concrete outputs, checks, and docs needed to exit Phase 0 (
 - Document any gaps/blockers below before starting SDK alignment tasks.
 
 ### Ready-to-start tasks (Phase 1 prerequisites)
-- Lock schema file locations (`schema/event.v1.json`, `schema/agent_frame.v1.json`) and generate TS/Dart bindings.
-- Land minimal websocket telemetry server and mock emitters; smoke test HOLO_FRAME ingest/replay.
-- Check in quaternion/elasticity CPU kernels plus vectors so WASM parity (Phase 1) has a baseline.
+  _All prerequisites satisfied by the completed Phase 0 deliverables._
 
 ### Gaps / Blockers
-- _Add items here as they are discovered._
+- None; Phase 0 exit criteria met.
