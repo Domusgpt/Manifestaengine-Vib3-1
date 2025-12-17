@@ -49,6 +49,22 @@ def _assert_sequence(value: Any, path: str) -> Sequence[Any]:
     return value
 
 
+def _assert_holo_frame(frame: Mapping[str, Any]) -> None:
+    """Validate a HOLO_FRAME payload with quaternion + translation."""
+
+    quaternion = _assert_sequence(frame.get("quaternion"), "HOLO_FRAME.quaternion")
+    translation = _assert_sequence(frame.get("translation"), "HOLO_FRAME.translation")
+    if len(quaternion) != 4:
+        raise ValidationError("HOLO_FRAME.quaternion must have 4 entries")
+    if len(translation) != 3:
+        raise ValidationError("HOLO_FRAME.translation must have 3 entries")
+    for index, value in enumerate(quaternion):
+        _assert_number(value, f"HOLO_FRAME.quaternion[{index}]")
+    for index, value in enumerate(translation):
+        _assert_number(value, f"HOLO_FRAME.translation[{index}]")
+    _assert_str(frame.get("surface"), "HOLO_FRAME.surface")
+
+
 def validate_minimal_parameters(payload: Mapping[str, Any]) -> None:
     """Validate the minimal parameter set used across envelopes.
 
@@ -68,6 +84,10 @@ def validate_minimal_parameters(payload: Mapping[str, Any]) -> None:
     _assert_number(data.get("ZOOM_DELTA"), "ZOOM_DELTA")
     _assert_number(data.get("ROT_DELTA"), "ROT_DELTA")
     _assert_bool(data.get("INPUT_TRIGGER"), "INPUT_TRIGGER")
+
+    holo_frame = data.get("HOLO_FRAME")
+    if holo_frame is not None:
+        _assert_holo_frame(_assert_mapping(holo_frame, "HOLO_FRAME"))
 
 
 def validate_agent_frame(frame: Mapping[str, Any]) -> None:
@@ -143,11 +163,20 @@ def validate_holo_intent(intent: Mapping[str, Any]) -> None:
             _assert_number(value, f"alignment.{field}[{index}]")
 
 
+def validate_holo_frame(frame: Mapping[str, Any]) -> None:
+    """Validate a HOLO_FRAME envelope for holographic transport."""
+
+    data = _assert_mapping(frame, "holo_frame")
+    validate_minimal_parameters(_assert_mapping(data.get("inputs", {}), "inputs"))
+    _assert_holo_frame(_assert_mapping(data.get("frame"), "frame"))
+
+
 VALIDATORS: Dict[str, Any] = {
     "event.v1": validate_event,
     "agent_frame.v1": validate_agent_frame,
     "render_config.v1": validate_render_config,
     "holo_intent": validate_holo_intent,
+    "holo_frame.v1": validate_holo_frame,
 }
 
 
