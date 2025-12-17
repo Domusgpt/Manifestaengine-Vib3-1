@@ -1,0 +1,178 @@
+import asyncio
+import math
+import unittest
+
+from src.phase3_validator import ValidationError
+from src.phase4_bridge import (
+    BridgeContext,
+    BridgeRouter,
+    GRPCSink,
+    InMemorySink,
+    OSCSink,
+    RateLimiter,
+    ReplayRecorder,
+    UDPSink,
+    derived_metrics,
+)
+
+
+def minimal_parameters(**overrides):
+    base = {
+        "POINTER_DELTA": {"dx": 0.3, "dy": 0.4},
+        "ZOOM_DELTA": 1.5,
+        "ROT_DELTA": -0.25,
+        "INPUT_TRIGGER": True,
+    }
+    base.update(overrides)
+    return base
+
+
+def sample_event_payload():
+    return {
+        "type": "input",
+        "timestamp": 101.0,
+        "payload": minimal_parameters(),
+    }
+
+
+def sample_render_config():
+    return {
+        "surface": "web",
+        "schema": "render_config.v1",
+        "inputs": minimal_parameters(),
+        "overlays": {"capability": True},
+    }
+
+
+def sample_agent_frame():
+    return {
+        "role": "navigator",
+        "goal": "align holographic anchor",
+        "sdk_surface": "holographic",
+        "bounds": {"x": 1, "y": 1, "z": 1},
+        "focus": {"path": "holographic.scene:anchor/base"},
+        "inputs": minimal_parameters(),
+        "outputs": ["render.intent.apply"],
+        "safety": {"spawn_bounds": 10, "rate_limit": 5, "rejection_reason": ""},
+    }
+
+
+class Phase4BridgeTest(unittest.TestCase):
+    def setUp(self):
+        self.context = BridgeContext(
+            session_id="session-1",
+            sdk_surface="wearable",
+            capabilities={"backend": "cpu", "schema": "event.v1"},
+        )
+
+    def test_derived_metrics_include_pointer_norm(self):
+        metrics = derived_metrics(minimal_parameters())
+        self.assertAlmostEqual(metrics["pointer_norm"], math.hypot(0.3, 0.4))
+        self.assertTrue(metrics["triggered"])
+
+    def test_dispatch_routes_to_all_sinks(self):
+        sink = InMemorySink(name="unity")
+        router = BridgeRouter([sink])
+
+        asyncio.run(router.dispatch("event.v1", sample_event_payload(), self.context))
+
+        self.assertEqual(len(sink.received), 1)
+        envelope = sink.received[0]["envelope"]
+        self.assertEqual(envelope["kind"], "event.v1")
+        self.assertIn("derived", envelope)
+        self.assertIn("context", envelope)
+
+    def test_duplicate_sink_name_raises(self):
+        router = BridgeRouter([InMemorySink(name="unity")])
+
+        with self.assertRaises(ValidationError):
+            router.add_sink(InMemorySink(name="unity"))
+
+    def test_invalid_payload_rejected(self):
+        sink = InMemorySink(name="unity")
+        router = BridgeRouter([sink])
+
+        with self.assertRaises(ValidationError):
+            asyncio.run(router.dispatch("event.v1", {"type": "input"}, self.context))
+
+    def test_holo_intent_paths_use_nested_inputs(self):
+        sink = InMemorySink(name="holo")
+        router = BridgeRouter([sink])
+        holo_payload = {
+            "holo_frame": "frame-1",
+            "sdk_surface": "holographic",
+            "render_config": sample_render_config(),
+            "alignment": {"quaternion": [0, 0, 0, 1], "translation": [0, 0, 0]},
+        }
+
+        asyncio.run(router.dispatch("holo_intent", holo_payload, self.context))
+
+        envelope = sink.received[0]["envelope"]
+        self.assertAlmostEqual(
+            envelope["derived"]["pointer_norm"], math.hypot(0.3, 0.4)
+        )
+
+    def test_agent_frame_routes_with_capability_overlay(self):
+        sink = InMemorySink(name="agent")
+        router = BridgeRouter([sink])
+        asyncio.run(router.dispatch("agent_frame.v1", sample_agent_frame(), self.context))
+
+        envelope = sink.received[0]["envelope"]
+        self.assertEqual(envelope["context"]["capabilities"], self.context.capabilities)
+
+    def test_udp_sink_respects_rate_limit_and_records_replay(self):
+        sent_payloads = []
+
+        async def sender(host, port, payload):
+            sent_payloads.append({"host": host, "port": port, "payload": payload})
+
+        recorder = ReplayRecorder()
+        udp_sink = UDPSink(
+            name="udp",
+            host="localhost",
+            port=9000,
+            sender=sender,
+            rate_limiter=RateLimiter(rate_per_sec=1, burst=1),
+            recorder=recorder,
+        )
+
+        router = BridgeRouter([udp_sink])
+        asyncio.run(router.dispatch("event.v1", sample_event_payload(), self.context))
+        asyncio.run(router.dispatch("event.v1", sample_event_payload(), self.context))
+
+        self.assertEqual(len(sent_payloads), 1)
+        self.assertEqual(len(udp_sink.error_log), 1)
+        self.assertEqual(recorder.frames[0]["sink"], "udp")
+
+    def test_osc_sink_encodes_address_payload(self):
+        captured = []
+
+        async def sender(host, port, payload):
+            captured.append(payload)
+
+        udp_sink = UDPSink(name="udp", host="localhost", port=9001, sender=sender)
+        osc_sink = OSCSink(name="osc", address="/pointer", udp_sink=udp_sink)
+
+        router = BridgeRouter([osc_sink])
+        asyncio.run(router.dispatch("event.v1", sample_event_payload(), self.context))
+
+        self.assertEqual(len(captured), 1)
+        payload = captured[0].decode("utf-8")
+        self.assertIn("/pointer", payload)
+        self.assertIn("context", payload)
+
+    def test_grpc_sink_logs_errors(self):
+        async def failing_stub(payload):
+            raise RuntimeError("stub failed")
+
+        sink = GRPCSink(name="grpc", stub=failing_stub)
+        router = BridgeRouter([sink])
+
+        asyncio.run(router.dispatch("event.v1", sample_event_payload(), self.context))
+
+        self.assertEqual(len(sink.error_log), 1)
+        self.assertEqual(sink.error_log[0]["error"], "stub failed")
+
+
+if __name__ == "__main__":
+    unittest.main()
